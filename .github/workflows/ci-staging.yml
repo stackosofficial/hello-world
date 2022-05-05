@@ -30,4 +30,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: patelprashantdds/hello-world:${{ steps.vars.outputs.sha_short }}
+          tags: patelprashantdds/hello-world:staging-${{ steps.vars.outputs.sha_short }}
