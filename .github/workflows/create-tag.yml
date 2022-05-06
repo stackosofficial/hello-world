@@ -14,15 +14,15 @@ jobs:
         run: |
           t=$(git describe --tags 'git rev-list --tags --max-count=1')
           echo $t
-      - name: Tag and push current repo code
-        run: |
-          if [ -z  "$t"]
-          then
-            log=$(git log --pretty=oneline)
-            t=0.0.0
-          #otherwise, get commits since last tag
-          else
-            log=$(git log $t..HEAD --pretty=oneline)
-          fi
-          git tag $t
-          git push origin $t
+      # - name: Tag and push current repo code
+      #   run: |
+      #     if [ -z  "$t"]
+      #     then
+      #       log=$(git log --pretty=oneline)
+      #       t=0.0.0
+      #     #otherwise, get commits since last tag
+      #     else
+      #       log=$(git log $t..HEAD --pretty=oneline)
+      #     fi
+      #     git tag $t
+      #     git push origin $t
