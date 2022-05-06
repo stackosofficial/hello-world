@@ -15,7 +15,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Test World
+          New World
         </a>
       </header>
     </div>
