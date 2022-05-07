@@ -26,8 +26,7 @@ jobs:
         uses: mathieudutour/github-tag-action@v6.0
         with:
           github_token: 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
-          # tag_prefix:
-          WITH_V: false
+          tag_prefix:
           # CUSTOM_TAG: |
           #   if [ ${{ steps.last_tag.outputs.last_tag }} ];
           #     then ;
