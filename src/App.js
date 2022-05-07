@@ -15,7 +15,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Amazing World
+          Incredible World
         </a>
       </header>
     </div>
