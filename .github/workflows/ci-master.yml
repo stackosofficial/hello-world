@@ -22,11 +22,12 @@ jobs:
       #     t=${{ steps.last_tag.outputs.last_tag }}
 
       - name: Bump version and push tag
-        id: tag_version
-        uses: anothrNick/github-tag-action@1.39.0
-        with:
-          github_token: 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
-          tag_prefix:
+        uses: anothrNick/github-tag-action@1.36.0
+        env:
+          GITHUB_TOKEN: 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
+          WITH_V: true
+          # github_token: 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
+          # tag_prefix:
           # DEFAULT_BUMP: minor
           # CUSTOM_TAG: |
           #   if [ ${{ steps.last_tag.outputs.last_tag }} ];
