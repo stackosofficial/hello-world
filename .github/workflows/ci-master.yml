@@ -27,6 +27,7 @@ jobs:
         with:
           github_token: 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
           tag_prefix:
+          DEFAULT_BUMP: minor
           # CUSTOM_TAG: |
           #   if [ ${{ steps.last_tag.outputs.last_tag }} ];
           #     then ;
