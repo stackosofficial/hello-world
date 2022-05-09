@@ -34,4 +34,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:$(git describe --tags `git rev-list --tags --max-count=1`)
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:$(git describe --tags $(git rev-list --tags --max-count=1))
