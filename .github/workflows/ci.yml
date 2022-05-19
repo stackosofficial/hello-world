@@ -18,8 +18,11 @@ jobs:
           fetch-depth: '0'
 
       - name: Extract branch name
+        id: branch_name
         run: echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
 
+      - name: WHICH BRANCH?
+        run: echo ${{ steps.branch_name.outputs.branch }}
       # - name: Create Docker Image Tag
       #   if:
       #     id: tags
