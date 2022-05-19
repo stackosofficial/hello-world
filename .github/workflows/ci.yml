@@ -23,14 +23,14 @@ jobs:
 
       # - name: Create Docker Image Tag [staging]
       - if: ${{ steps.branch_name.outputs.branch }} == 'staging'
-          run: echo "TAG=staging-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        run: echo "TAG=staging-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       # - name: Bump version and push tag for [master]
       - if: ${{ steps.branch_name.outputs.branch }} == 'master'
-          uses: anothrNick/github-tag-action@1.36.0
-          env:
-            GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-            WITH_V: false
+        uses: anothrNick/github-tag-action@1.36.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          WITH_V: false
 
       - name: Create Docker Image Tag [master]
         run: echo "TAG=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_ENV
