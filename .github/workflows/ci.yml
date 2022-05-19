@@ -2,21 +2,25 @@ name: Docker Image - Staging
 
 on:
   push:
-    branches: [master, staging]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    branches: [staging]
 
 jobs:
-  job_id:
+  build:
+    runs-on: ubuntu-latest
+
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: 'Auth'
       - id: 'auth'
         uses: 'google-github-actions/auth@v0'
         with:
-          credentials_json: '${{ secrets.gcp_credentials }}'
+        credentials_json: '${{ secrets.gcp_credentials }}'
 
+      - name: Get Credentials
       - id: 'get-credentials'
         uses: 'google-github-actions/get-gke-credentials@v0'
         with:
-          cluster_name: 'infernos-banzaicloud-k8sr'
+          cluster_name: 'infernos-banzaicloud-k8s'
           location: 'us-central1'
