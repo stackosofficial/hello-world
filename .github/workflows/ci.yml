@@ -5,17 +5,13 @@ on:
     branches: [staging]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
+  job_id:
     steps:
-      - name: 'Auth'
       - id: 'auth'
         uses: 'google-github-actions/auth@v0'
         with:
         credentials_json: '${{ secrets.gcp_credentials }}'
 
-      - name: Get credentials
       - id: 'get-credentials'
         uses: 'google-github-actions/get-gke-credentials@v0'
         with:
