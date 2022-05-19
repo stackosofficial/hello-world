@@ -5,7 +5,9 @@ on:
     branches: [staging]
 
 jobs:
-  job_id:
+  build:
+    runs-on: ubuntu-latest
+
     steps:
       - name: 'Auth'
       - id: 'auth'
@@ -19,7 +21,3 @@ jobs:
         with:
           cluster_name: 'infernos-banzaicloud-k8s'
           location: 'us-central1'
-
-      - name: Get pods
-      - id: 'get-pods'
-        run: 'kubectl get pods'
