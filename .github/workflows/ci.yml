@@ -22,12 +22,15 @@ jobs:
         run: echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
 
       - name: Create Docker Image Tag
-        run: |
-          if [[ ${{ steps.branch_name.outputs.branch }} == staging ]]; then
-            echo "::set-env name=TAG::staging-$(git rev-parse --short HEAD)"
-          else
-            echo "::set-env name=TAG::master-$(git rev-parse --short HEAD)"
-          fi
+        if: ${{ steps.branch_name.outputs.branch }} == staging
+        run: echo "::set-env name=TAG::staging-$(git rev-parse --short HEAD)"
+
+      #   run: |
+      #     if [[ ${{ steps.branch_name.outputs.branch }} == staging ]]; then
+      #       echo "::set-env name=TAG::staging-$(git rev-parse --short HEAD)"
+      #     else
+      #       echo "::set-env name=TAG::master-$(git rev-parse --short HEAD)"
+      #     fi
 
       - name: ENVS CHECK
         run: echo ${{ env.TAG }}
