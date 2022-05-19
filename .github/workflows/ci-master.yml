@@ -19,69 +19,23 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           WITH_V: false
 
-      # - name: Login to Docker Hub
-      #   uses: docker/login-action@v1
-      #   with:
-      #     username: ${{ secrets.DOCKER_HUB_USERNAME }}
-      #     password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
-      # - name: Set up Docker Buildx
-      #   uses: docker/setup-buildx-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
       - name: Get latest tag
         id: vars
         run: echo "::set-output name=latest_tag::$(git describe --tags $(git rev-list --tags --max-count=1))"
 
-      - name: Set docker image & docker registery
-        run: |
-          echo ::set-env name=DOCKER_IMAGE::${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ steps.vars.outputs.latest_tag }}
-          echo ::set-env name=DOCKER_REGISTERY::eu.gcr.io
-
-      # - name: Docker Build & Push for Production
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     context: .
-      #     file: ./Dockerfile
-      #     push: true
-      #     tags: ${{ env.DOCKER_IMAGE }}
-
-      - name: Push docker image to Google's Container Registery
-        uses: elgohr/Publish-Docker-Github-Action@2.14
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Docker Build & Push for Staging
+        uses: docker/build-push-action@v2
         with:
-        name: ${{ env.DOCKER_IMAGE }}
-        username: ${{ steps.gcloud.outputs.username }}
-        password: ${{ steps.gcloud.outputs.password }}
-        registry: ${{ env.DOCKER_REGISTERY }}
-        tag_names: true
-        buildargs: SSH_PRIVATE_KEY
-
-      - name: Set Cluster credentials
-        run: |
-          echo ::set-env name=CLUSTER_NAME::hello-world-prod
-          echo ::set-env name=CLUSTER_ZONE::europe-west3-a
-          echo ::set-env name=PROJECT_NAME::hello-world
-
-      - name: Install kubectl
-        run: |
-          sudo apt-get install kubectl
-      - name: Install helm
-        run: |
-          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-          chmod 700 get_helm.sh
-          ./get_helm.sh
-
-      - name: Deploy image on cluster
-        env:
-          GCLOUD_KEY: ${{ secrets.GCLOUD_KEY }}
-        run: |
-          echo "$GCLOUD_KEY" | base64 --decode > ${HOME}/gcloud.json
-          gcloud auth activate-service-account --key-file=${HOME}/gcloud.json
-          gcloud auth configure-docker
-          gcloud container clusters get-credentials \
-          ${{ env.CLUSTER_NAME }} --zone
-          ${{ env.CLUSTER_ZONE }} --project ${{ env.PROJECT_NAME }}
-          # install/upgrade helm chart
-          helm upgrade --install backend ./deploy/helm/backend \
-                  --values ./deploy/helm/backend/env.values.prod.yaml
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ steps.vars.outputs.latest_tag }}
