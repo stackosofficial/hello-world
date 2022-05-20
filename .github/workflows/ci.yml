@@ -23,11 +23,11 @@ jobs:
         run: echo "BRANCH=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
 
       # - name: Create Docker Image Tag [staging]
-      - if: $BRANCH == 'staging'
+      - if: BRANCH == 'staging'
         run: echo "TAG=staging-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       # - name: Bump version and push tag for [master]
-      - if: $BRANCH == 'master'
+      - if: BRANCH == 'master'
         uses: anothrNick/github-tag-action@1.36.0
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
