@@ -21,3 +21,4 @@ jobs:
         with:
           cluster_name: 'infernos-banzaicloud-k8s'
           location: 'us-central1'
+          credentials: ${{ secrets.GCP_CREDENTIALS }}
