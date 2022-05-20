@@ -19,6 +19,6 @@ jobs:
       - id: 'get-credentials'
         uses: 'google-github-actions/get-gke-credentials@v0.2.1'
         with:
-          cluster_name: 'infernos-banzaicloud-k8s'
+          cluster_name: 'stackos-infra-node-4'
           location: 'us-central1'
           credentials: ${{ secrets.GCP_CREDENTIALS }}
