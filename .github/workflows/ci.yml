@@ -35,6 +35,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           WITH_V: false
 
+      - if: ${{ steps.create_branch_name.outputs.branch }} == 'master'
       - name: Create Docker Image Tag [master]
         id: create_tag
         run: echo "::set-output name=tag::$(git rev-list --tags --max-count=1))"
