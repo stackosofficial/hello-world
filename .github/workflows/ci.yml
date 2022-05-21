@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: echo ${{ env.TAG }} ---- $TAG ---- ${env.TAG} ---- ${TAG}
+      - run: echo ${{ env.TAG }} ---- $TAG ---- ${TAG}
 
   ################################################################################
   # build-image-master:
