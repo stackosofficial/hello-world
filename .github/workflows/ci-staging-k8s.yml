@@ -38,8 +38,12 @@ jobs:
 
   deploy:
     needs: build
+    runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - id: install-kubectl
         run: |
           sudo apt-get update
