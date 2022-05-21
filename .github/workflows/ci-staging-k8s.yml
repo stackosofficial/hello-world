@@ -37,14 +37,14 @@ jobs:
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:staging-${{ steps.vars.outputs.sha_short }}
 
   deploy:
-    # needs: build
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
       # - name: Checkout
-      #   uses: actions/checkout@v2
+      # uses: actions/checkout@v2
 
-      - name: Install kubectl
+      - id: install-kubectl
         run: |
           sudo apt-get update
           sudo apt-get install -y apt-transport-https ca-certificates curl
@@ -53,15 +53,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y kubectl
 
-      - name: Get GKE Credentials
-        id: get-credentials
+      - id: get-credentials
         uses: 'google-github-actions/get-gke-credentials@v0.2.1'
         with:
           cluster_name: 'stackos-infra-node-4'
           location: 'us-central1'
           credentials: ${{ secrets.GCP_CREDENTIALS }}
 
-      -name: Get namespaces
-       id: get-namespaces
-       run: 'kubectl get namespaces'
-
+      - id: get-namespaces
+        run: 'kubectl get namespaces'
