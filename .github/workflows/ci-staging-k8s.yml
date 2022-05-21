@@ -44,18 +44,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install kubectl
-        # - id: install-kubectl
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y apt-transport-https ca-certificates curl
-          sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
-          echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-          sudo apt-get update
-          sudo apt-get install -y kubectl
+      # - name: Install kubectl
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y apt-transport-https ca-certificates curl
+      #     sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+      #     echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+      #     sudo apt-get update
+      #     sudo apt-get install -y kubectl
 
       - name: Get GKE Credentials
-        # - id: get-credentials
         uses: 'google-github-actions/get-gke-credentials@v0.2.1'
         with:
           cluster_name: 'stackos-infra-node-4'
@@ -63,5 +61,4 @@ jobs:
           credentials: ${{ secrets.GCP_CREDENTIALS }}
 
       - name: Get namespaces
-        # - id: get-namespaces
         run: 'kubectl get namespaces'
