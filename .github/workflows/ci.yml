@@ -11,10 +11,13 @@ jobs:
   create-tag-staging:
     if: github.ref == 'refs/heads/staging'
     runs-on: ubuntu-latest
+
+    outputs:
+      tag: ${{ steps.step2.outputs.tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - run: echo "TAG=staging-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - run: echo "::set-output name=tag::staging-$(git rev-parse --short HEAD)"
 
   # create-tag-master:
   #   if: github.ref == 'refs/heads/master'
@@ -37,4 +40,4 @@ jobs:
     needs: create-tag-staging
     runs-on: ubuntu-latest
     steps:
-      - run: echo $TAG
+      - run: echo ${{ needs.create-tag-staging.outputs.tag }}
