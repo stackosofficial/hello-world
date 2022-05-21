@@ -34,6 +34,7 @@ jobs:
   #     -run: echo "TAG=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_ENV
 
   check-envs:
+    needs: create-tag-staging
     runs-on: ubuntu-latest
     steps:
       - run: echo $TAG
