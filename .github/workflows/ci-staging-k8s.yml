@@ -39,7 +39,6 @@ jobs:
   deploy-to-k8s:
     needs: build-docker-image
 
-    steps:
       - name: Install kubectl
         run: |
           sudo apt-get update
