@@ -9,7 +9,7 @@ on:
 
 jobs:
   create-tag-staging:
-    if: GITHUB_REF#refs/heads/ == 'staging'
+    if: ${{ GITHUB_REF#refs/heads/ }} == 'staging'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
