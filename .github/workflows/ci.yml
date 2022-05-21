@@ -37,7 +37,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           WITH_V: false
 
-      -run: echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))"
+      - run: echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))"
 
   check-envs:
     needs: create-tag-staging
