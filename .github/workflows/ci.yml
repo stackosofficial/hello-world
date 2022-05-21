@@ -40,4 +40,5 @@ jobs:
     needs: create-tag-staging
     runs-on: ubuntu-latest
     steps:
+      -name: ${{ needs.create-tag-staging.outputs.tag }}
       - run: echo ${{ needs.create-tag-staging.outputs.tag }}
