@@ -1,4 +1,4 @@
-name: Docker Image - Staging
+name: Build & Deploy
 
 on:
   push:
@@ -44,7 +44,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - id: install-kubectl
+      - name: Install kubectl
+        # - id: install-kubectl
         run: |
           sudo apt-get update
           sudo apt-get install -y apt-transport-https ca-certificates curl
@@ -53,12 +54,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y kubectl
 
-      - id: get-credentials
+      - name: Get GKE Credentials
+        # - id: get-credentials
         uses: 'google-github-actions/get-gke-credentials@v0.2.1'
         with:
           cluster_name: 'stackos-infra-node-4'
           location: 'us-central1'
           credentials: ${{ secrets.GCP_CREDENTIALS }}
 
-      - id: get-namespaces
+      - name: Get namespaces
+        # - id: get-namespaces
         run: 'kubectl get namespaces'
