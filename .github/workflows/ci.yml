@@ -47,7 +47,7 @@ jobs:
 
       - name: Deploy Docker image to K8S
         run: |
-          kubectl edit deployment/${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} --image=${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ steps.short-commit.outputs.tag }}
+          kubectl -- edit deployment/${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} --image=${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ steps.short-commit.outputs.tag }}
           kubectl describe deployments.apps ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
           kubectl get po  --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME }}
 
@@ -100,6 +100,6 @@ jobs:
 
       - name: Deploy Docker image to K8S
         run: |
-          kubectl edit deployment/${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} --image=${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ steps.version.outputs.tag }}
+          kubectl -- edit deployment/${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} --image=${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ steps.version.outputs.tag }}
           kubectl describe deployments.apps ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
           kubectl get po  --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME }}
