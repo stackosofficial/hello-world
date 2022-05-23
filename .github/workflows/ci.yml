@@ -98,8 +98,9 @@ jobs:
           location: 'us-central1'
           credentials: ${{ secrets.GCP_CREDENTIALS }}
 
+      # kubectl patch deployment ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ steps.image-tag.outputs.tag }}"}]}}}}'
       - name: Deploy Docker image to K8S
         run: |
-          kubectl patch deployment ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ steps.image-tag.outputs.tag }}"}]}}}}'
+          kubectl patch deployment hello-world-stackos-infra-node-4 --namespace test -p '{"spec":{"template":{"spec":{"containers":[{"name":"hello-world-stackos-infra-node-4","image":"patelprashantdds/hello-world:4.6.0"}]}}}}'
           kubectl describe deployments.apps ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
           kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME }}
