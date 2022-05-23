@@ -27,4 +27,4 @@ RUN apk add --no-cache bash
 
 
 # Start Nginx server
-CMD ["/bin/sh", "-c", nginx -g \"daemon off;\""]
+CMD ["/bin/sh", "-c", "nginx -g \"daemon off;\""]
