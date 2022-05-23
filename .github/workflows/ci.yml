@@ -38,6 +38,19 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ steps.short-commit.outputs.tag }}
 
+      - name: Get GKE Credentials
+        uses: 'google-github-actions/get-gke-credentials@v0.2.1'
+        with:
+          cluster_name: 'stackos-infra-node-4'
+          location: 'us-central1'
+          credentials: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Deploy Docker image to K8S
+        run: |
+          kubectl edit deployment/${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} --image=${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ steps.short-commit.outputs.tag }}
+          kubectl describe deployments.apps ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
+          kubectl get po  --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME }}
+
   ################################################################################
   build-image-master:
     if: github.ref == 'refs/heads/master'
@@ -77,21 +90,16 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ steps.version.outputs.tag }}
-################################################################################
-# deploy:
-#   needs: build
-#   runs-on: ubuntu-latest
 
-#   steps:
-#     - name: Checkout
-#       uses: actions/checkout@v2
+      - name: Get GKE Credentials
+        uses: 'google-github-actions/get-gke-credentials@v0.2.1'
+        with:
+          cluster_name: 'stackos-infra-node-4'
+          location: 'us-central1'
+          credentials: ${{ secrets.GCP_CREDENTIALS }}
 
-#     - name: Get GKE Credentials
-#       uses: 'google-github-actions/get-gke-credentials@v0.2.1'
-#       with:
-#         cluster_name: 'stackos-infra-node-4'
-#         location: 'us-central1'
-#         credentials: ${{ secrets.GCP_CREDENTIALS }}
-
-#     - name: Get namespaces
-#       run: 'kubectl get namespaces'
+      - name: Deploy Docker image to K8S
+        run: |
+          kubectl edit deployment/${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} --image=${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ steps.version.outputs.tag }}
+          kubectl describe deployments.apps ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
+          kubectl get po  --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME }}
