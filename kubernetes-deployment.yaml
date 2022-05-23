@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: patelprashantdds/hello-world:4.1.0
+        image: patelprashantdds/hello-world:4.2.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
