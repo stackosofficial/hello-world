@@ -10,9 +10,6 @@ spec:
     protocol: TCP
     targetPort: http
   selector:
-    app: hello-world-stackos-infra-node-4
-    app.kubernetes.io/instance: be-api
-    app.kubernetes.io/name: hello-world-stackos-infra-node-4
     name: hello-world-stackos-infra-node-4
   sessionAffinity: None
   type: ClusterIP
