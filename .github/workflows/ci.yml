@@ -37,8 +37,8 @@ jobs:
       (needs.create-git-tag.result == 'success' || needs.create-git-tag.result == 'skipped') && 
       !(needs.test-1.result == 'skipped')
 
-    # outputs:
-    #   git-tag: ${{ steps.image-tag.outputs.tag }}
+    outputs:
+      git-tag: ${{ steps.image-tag.outputs.tag }}
 
     steps:
       - name: Checkout
@@ -46,15 +46,11 @@ jobs:
 
       - if: ${{ github.ref == 'refs/heads/master' }}
         run: echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))"
-        env:
-          TAG: echo "$(git describe --tags $(git rev-list --tags --max-count=1))"
-        # id: image-tag
+        id: image-tag
 
       - if: ${{ github.ref == 'refs/heads/staging' }}
         run: echo "::set-output name=TAG::staging-$(git rev-parse --short HEAD)"
-        env:
-          TAG: HELLO
-        # id: image-tag
+        id: image-tag
 
   ################################################################################
   env-check:
