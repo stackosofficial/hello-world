@@ -40,11 +40,10 @@ jobs:
           fetch-depth: '0'
 
       - if: ${{ github.ref == 'refs/heads/master' }}
-        run: echo $(git rev-parse --short HEAD) -> $(git rev-list --tags --max-count=1))
-        # uses: anothrNick/github-tag-action@1.36.0
-        #  env:
-        #    GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-        #    WITH_V: false
+        uses: anothrNick/github-tag-action@1.36.0
+         env:
+           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+           WITH_V: false
 
       # - id: image-tag
       #   run: |
@@ -64,4 +63,4 @@ jobs:
         uses: actions/checkout@v2
 
       - name: CHECK ENV
-        run: echo $(git rev-parse --short HEAD) -> $(git rev-list --tags --max-count=1))
+        run: echo "$(git rev-parse --short HEAD) -> $(git rev-list --tags --max-count=1))"
