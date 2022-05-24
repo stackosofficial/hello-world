@@ -52,8 +52,6 @@ jobs:
         id: image-tag
         run: echo "::set-output name=tag::staging-$(git rev-parse --short HEAD)"
 
-  create-git-tag-staging:
-
   ################################################################################
   env-check:
     runs-on: ubuntu-latest
