@@ -12,7 +12,7 @@ function App() {
           target='_blank'
           rel='noopener noreferrer'
         >
-          Hello World | Deployment completed
+          Hello World | Deployment test
         </a>
       </header>
     </div>
