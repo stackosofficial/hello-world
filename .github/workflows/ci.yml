@@ -39,12 +39,10 @@ jobs:
         with:
           fetch-depth: '0'
 
-      - if: ${{ github.ref == 'refs/heads/master' }}
-        run:
-          uses: anothrNick/github-tag-action@1.36.0
-          env:
-            GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-            WITH_V: false
+      - uses: anothrNick/github-tag-action@1.36.0
+         env:
+           GITHUB_TOKEN: ${{ github.ref == 'refs/heads/master' }} && ${{ secrets.GIT_TOKEN }}
+           WITH_V: false
 
       # - id: image-tag
       #   run: |
