@@ -46,11 +46,11 @@ jobs:
 
       - if: ${{ github.ref == 'refs/heads/master' }}
         run: echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))"
-        id: image-tag
+        id: image-tag-master
 
       - if: ${{ github.ref == 'refs/heads/staging' }}
         run: echo "::set-output name=TAG::staging-$(git rev-parse --short HEAD)"
-        id: image-tag
+        id: image-tag-staging
 
   ################################################################################
   env-check:
@@ -64,4 +64,4 @@ jobs:
         uses: actions/checkout@v2
 
       - name: CHECK ENV
-        run: echo "hello ${{ env.TAG }}"
+        run: echo "${{ steps.create-image-tag.image-tag-staging.outputs.tag }} - ${{ steps.create-image-tag.image-tag-master.outputs.tag }}"
