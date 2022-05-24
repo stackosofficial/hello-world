@@ -47,12 +47,7 @@ jobs:
          env:
            GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
            WITH_V: false
-        run: echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))"
         
-
-      # - if: ${{ github.ref === 'refs/heads/staging' }}
-      #   run: echo "::set-output name=tag::staging-$(git rev-parse --short HEAD)"
-
       # - id: image-tag
       #   run: |
       #     # if[[ ${{ github.ref }} == 'refs/heads/staging' ]]; then
@@ -71,4 +66,4 @@ jobs:
         uses: actions/checkout@v2
 
       - name: CHECK ENV
-        run: echo ${{needs.build.outputs.image-tag}}
+        run: echo $(git rev-parse --short HEAD) -> $(git rev-list --tags --max-count=1))
