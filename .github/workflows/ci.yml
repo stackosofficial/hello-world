@@ -51,7 +51,7 @@ jobs:
         # id: image-tag
 
       - if: ${{ github.ref == 'refs/heads/staging' }}
-        run: echo ::set-env name=TAG::staging-$(git rev-parse --short HEAD)
+        run: echo ::set-output name=TAG::staging-$(git rev-parse --short HEAD)
         env:
           TAG: echo "$(git rev-parse --short HEAD)"
         # id: image-tag
