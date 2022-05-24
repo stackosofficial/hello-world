@@ -40,11 +40,12 @@ jobs:
           fetch-depth: '0'
 
       - if: ${{ github.ref === 'refs/heads/master' }}
-        uses: anothrNick/github-tag-action@1.36.0
-         env:
-           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-           WITH_V: false
-        
+        run: echo $(git rev-parse --short HEAD) -> $(git rev-list --tags --max-count=1))
+        # uses: anothrNick/github-tag-action@1.36.0
+        #  env:
+        #    GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+        #    WITH_V: false
+
       # - id: image-tag
       #   run: |
       #     # if[[ ${{ github.ref }} == 'refs/heads/staging' ]]; then
