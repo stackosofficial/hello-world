@@ -37,8 +37,8 @@ jobs:
       (needs.create-git-tag.result == 'success' || needs.create-git-tag.result == 'skipped') && 
       !(needs.test-1.result == 'skipped')
 
-    outputs:
-      git-tag: ${{ steps.image-tag.outputs.tag }}
+    # outputs:
+    #   git-tag: ${{ steps.image-tag.outputs.tag }}
 
     steps:
       - name: Checkout
@@ -49,17 +49,17 @@ jobs:
         run: echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))"
 
       - if: ${{ github.ref == 'refs/heads/staging' }}
-        id: image-tag
-        run: echo "::set-output name=tag::staging-$(git rev-parse --short HEAD)"
+        # id: image-tag
+        run: echo ::set-env name=TAG::staging-$(git rev-parse --short HEAD)
 
   ################################################################################
   env-check:
     runs-on: ubuntu-latest
-    outputs:
-      tag: ${{ steps.git-tag.outputs.tag }}
+    # outputs:
+    #   tag: ${{ steps.git-tag.outputs.tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: CHECK ENV
-        run: echo "$(git rev-parse --short HEAD) -> $(git rev-list --tags --max-count=1))"
+        run: echo "${{ env.TAG }}"
