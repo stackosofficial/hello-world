@@ -31,7 +31,8 @@ jobs:
   ################################################################################
   build:
     runs-on: ubuntu-latest
-    # needs: create-git-tag
+    needs: create-git-tag
+    if: ${{ always() && needs.create-git-tag.failure }}
 
     outputs:
       image-tag: ${{ steps.image-tag.outputs.tag }}
@@ -44,11 +45,12 @@ jobs:
 
       - id: image-tag
         run: |
-          if[[ ${{ github.ref }} == 'refs/heads/staging' ]]; then
-            echo "::set-output name=tag::staging-$(git rev-parse --short HEAD)"
-          elif [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
-            echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))"
-          fi
+          # if[[ ${{ github.ref }} == 'refs/heads/staging' ]]; then
+          #   echo "::set-output name=tag::staging-$(git rev-parse --short HEAD)"
+          # elif [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
+          #   echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))"
+          # fi
+          echo "::set-output name=tag::staging-$(git rev-parse --short HEAD)"
 
   ################################################################################
   env-check:
