@@ -31,8 +31,6 @@ jobs:
   ################################################################################
   build:
     runs-on: ubuntu-latest
-    outputs:
-      image-tag: ${{ steps.image-tag.outputs.tag }}
     # if: ${{ always() && !cancelled() && needs.build.result == 'success' }}
 
     steps:
@@ -42,7 +40,6 @@ jobs:
           fetch-depth: '0'
 
       - if: ${{ github.ref === 'refs/heads/master' }}
-        id: image-tag
         uses: anothrNick/github-tag-action@1.36.0
          env:
            GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
