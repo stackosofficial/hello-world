@@ -60,4 +60,4 @@ jobs:
         uses: actions/checkout@v2
 
       - name: CHECK ENV
-        run: echo "master-tag=${{ steps.create-image-tag.outputs.git-tag-master }}, staging-tag=${{ steps.create-image-tag.outputs.git-tag-staging }}"
+        run: echo master-tag=${{ steps.create-image-tag.outputs.git-tag-master }}, staging-tag=${{ steps.create-image-tag.outputs.git-tag-staging }}
