@@ -125,7 +125,7 @@ jobs:
   ################################################################################ MASTER
   deploy-to-gke-master:
     runs-on: ubuntu-latest
-    needs: [build-and-push-image-staging, get-gke-credentials-master]
+    needs: [build-and-push-image-master, get-gke-credentials-master]
 
     steps:
       - name: Checkout
