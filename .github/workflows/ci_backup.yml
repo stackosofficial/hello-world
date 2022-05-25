@@ -47,7 +47,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: CHECK ENV
-        run: echo image-tag=${{ steps.create-image-tag.outputs.image-tag }}
+        run: echo "image-tag=${{ steps.create-image-tag.outputs.image-tag }}"
 
   ################################################################################
   # create-image-tag:
