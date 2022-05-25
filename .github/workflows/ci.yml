@@ -27,7 +27,7 @@ jobs:
       - name: Set environment variables
         run: |
           echo "IMAGE_TAG_STAGING=staging-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-          # echo "IMAGE_TAG_MASTER=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_ENV
+          echo "IMAGE_TAG_MASTER=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_ENV
 
   ################################################################################ DOCKERHUB LOGIN
   login-to-dockerhub:
@@ -62,7 +62,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ env.IMAGE_TAG_STAGING }}"
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ env.IMAGE_TAG_STAGING }}
 
   ################################################################################ MASTER
   build-and-push-image-master:
