@@ -12,6 +12,8 @@ jobs:
   build-and-push-image-staging:
     if: github.ref == 'refs/heads/staging'
     runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.image-tag.outputs.tag }}
 
     steps:
       - name: Checkout
@@ -116,12 +118,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - id: image-tag
-        run: echo "::set-output name=tag::staging-$(git rev-parse --short HEAD)"
-
       - name: Deploy Docker image to GKE - Staging
         run: |
-          kubectl patch deployment ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ steps.image-tag.outputs.tag }}"}]}}}}'
+          kubectl patch deployment ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ needs.build-and-push-image-staging.outputs.image-tag }}"}]}}}}'
           kubectl describe deployments.apps ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
           kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME }}
 
