@@ -8,8 +8,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-image:
+  ################################################################################
+  create-image-tag:
+    # if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.image-tag.outputs.tag }}
 
     steps:
       - name: Checkout
@@ -17,12 +21,12 @@ jobs:
         with:
           fetch-depth: '0'
 
-    - if: ${{ github.ref == 'refs/heads/master' }}
-      name: Bump version and push tag
-      uses: anothrNick/github-tag-action@1.36.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-        WITH_V: false
+      - if: ${{ github.ref == 'refs/heads/master' }}
+        name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.36.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          WITH_V: false
 
       - id: image-tag
         run: |
@@ -31,14 +35,6 @@ jobs:
           else
             echo "::set-output name=tag::staging-$(git rev-parse --short HEAD)"
           fi
-
-      - name: Docker Build & Push for staging
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./Dockerfile
-          # push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ steps.image-tag.outputs.tag }}
 
   ################################################################################ STAGING
   # build-and-push-image-staging:
