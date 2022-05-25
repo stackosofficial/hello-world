@@ -34,8 +34,8 @@ jobs:
       (needs.create-git-tag.result == 'success' || needs.create-git-tag.result == 'skipped')
 
     outputs:
-      git-tag-master: ${{ steps.image-tag.outputs.tag }}
-      git-tag-staging: ${{ steps.image-tag.outputs.tag }}
+      git-tag-master: ${{ steps.image-tag-master.outputs.tag }}
+      git-tag-staging: ${{ steps.image-tag-staging.outputs.tag }}
 
     steps:
       - name: Checkout
