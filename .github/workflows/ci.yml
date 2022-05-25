@@ -116,9 +116,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - id: image-tag
+        run: echo "::set-output name=tag::staging-$(git rev-parse --short HEAD)"
+
       - name: Deploy Docker image to GKE - Staging
         run: |
-          kubectl patch deployment ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ needs.build-and-push-image-staging.image-tag.outputs.tag }}"}]}}}}'
+          kubectl patch deployment ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ steps.image-tag.outputs.tag }}"}]}}}}'
           kubectl describe deployments.apps ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
           kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME }}
 
@@ -131,8 +134,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - id: image-tag
+        run: echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))"
+
       - name: Deploy Docker image to GKE - master
         run: |
-          kubectl patch deployment ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ needs.build-and-push-image-master.image-tag.outputs.tag }}"}]}}}}'
+          kubectl patch deployment ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ steps.image-tag.outputs.tag }}"}]}}}}'
           kubectl describe deployments.apps ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
           kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME }}
