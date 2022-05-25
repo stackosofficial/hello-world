@@ -32,6 +32,7 @@ jobs:
   ################################################################################ DOCKERHUB LOGIN
   login-to-dockerhub:
     runs-on: ubuntu-latest
+    needs: create-docker-image-tag
 
     steps:
       - name: Checkout
@@ -62,7 +63,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ env.IMAGE_TAG_STAGING }}
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:$IMAGE_TAG_STAGING
 
   ################################################################################ MASTER
   build-and-push-image-master:
