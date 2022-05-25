@@ -36,7 +36,10 @@ jobs:
             echo "::set-output name=tag::staging-$(git rev-parse --short HEAD)"
           fi
 
-      - name: Docker Build & Push for staging
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Docker Build
         uses: docker/build-push-action@v2
         with:
           context: .
