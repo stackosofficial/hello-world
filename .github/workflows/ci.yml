@@ -12,7 +12,7 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     outputs:
-      image-tag: ${{ steps.image-tag.output.tag }}
+      image-tag: ${{ steps.image-tag.outputs.tag }}
 
     steps:
       - name: Checkout
