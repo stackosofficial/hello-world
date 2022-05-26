@@ -86,7 +86,7 @@ jobs:
         run: |
           cd /tmp
           ls
-          rm -rf /tmp/myimage.tar
+          rm -rf myimage.tar
           ls
 
   # ############################################################################### DEPLOY-STAGING
