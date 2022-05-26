@@ -69,7 +69,7 @@ jobs:
 
       - name: Load image
         run: |
-          docker load --input ./tmp/myimage
+          docker load --input /tmp/myimage
           docker image ls -a
 
       - name: Login to Docker Hub
@@ -78,17 +78,20 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
-      - name: Docker Push
-        uses: docker/build-push-action@v3
-        with:
-          context: ./tmp/myimage
-          # file: ./Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ needs.build-image.outputs.image-tag }}
+      # - name: Docker Push
+      #   uses: docker/build-push-action@v3
+      #   with:
+      #     context: ./tmp/myimage
+      #     # file: ./Dockerfile
+      #     push: true
+      #     tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ needs.build-image.outputs.image-tag }}
 
-      - name: Inspect
-        run: |
-          docker image inspect myimage
+      # - name: Inspect
+      #   run: |
+      #     docker image inspect myimage
+
+      - name: Push image
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ needs.build-image.outputs.image-tag }}
 
   # ############################################################################### DEPLOY-STAGING
   # deploy-to-gke-staging:
