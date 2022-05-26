@@ -60,6 +60,7 @@ jobs:
   ################################################################################ PUSH
   push-image:
     runs-on: ubuntu-latest
+    needs: build-image
     outputs:
       image-tag: ${{ steps.image-tag.outputs.tag }}
 
