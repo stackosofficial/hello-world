@@ -84,9 +84,8 @@ jobs:
 
       - name: Remove local docker image
         run: |
+          rm -rf /tmp/myimage.tar
           cd /tmp
-          ls
-          rm -rf myimage.tar
           ls
 
   # ############################################################################### DEPLOY-STAGING
