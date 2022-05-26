@@ -51,6 +51,13 @@ jobs:
           file: ./Dockerfile
           # push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ steps.image-tag.outputs.tag }}
+          outputs: type=docker,dest=/tmp/myimage.tar
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: myimage
+          path: /tmp/myimage.tar
 
   ################################################################################ STAGING
   # deploy-to-gke-staging:
