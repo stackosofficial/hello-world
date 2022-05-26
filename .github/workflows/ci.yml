@@ -91,7 +91,11 @@ jobs:
       #     docker image inspect myimage
 
       - name: Push image
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ needs.build-image.outputs.image-tag }}
+        run: |
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ needs.build-image.outputs.image-tag }}
+          ls
+          cd /tmp
+          ls
 
   # ############################################################################### DEPLOY-STAGING
   # deploy-to-gke-staging:
