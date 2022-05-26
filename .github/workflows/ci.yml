@@ -11,6 +11,8 @@ jobs:
   ################################################################################ BUILD & PUSH
   build-and-push:
     runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.image-tag.output.tag }}
 
     steps:
       - name: Checkout
@@ -68,7 +70,7 @@ jobs:
 
       - name: Deploy Docker image to GKE - Staging
         run: |
-          kubectl patch deployment ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ needs.build-and-push-image-staging.outputs.image-tag }}"}]}}}}'
+          kubectl patch deployment ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ needs.build-and-push.outputs.image-tag }}"}]}}}}'
           kubectl describe deployments.apps ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
           kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME }}
 
@@ -91,6 +93,6 @@ jobs:
 
       - name: Deploy Docker image to GKE - master
         run: |
-          kubectl patch deployment ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ needs.build-and-push-image-master.outputs.image-tag }}"}]}}}}'
+          kubectl patch deployment ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ needs.build-and-push.outputs.image-tag }}"}]}}}}'
           kubectl describe deployments.apps ${{ secrets.PROJECT_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
           kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME }}
