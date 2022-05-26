@@ -84,6 +84,8 @@ jobs:
 
       - name: Remove local docker image
         run: |
+          cd /tmp
+          ls
           rm -rf /tmp/myimage.tar
           ls
           ls -R
