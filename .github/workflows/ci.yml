@@ -82,9 +82,9 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: /tmp/myimage.tar
-          file: ./Dockerfile
+          # file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ needs.build-image.outputs.tag }}
+          # tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ needs.build-image.outputs.tag }}
 
       - name: Inspect
         run: |
