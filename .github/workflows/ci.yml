@@ -81,7 +81,7 @@ jobs:
       - name: Docker Push
         uses: docker/build-push-action@v3
         with:
-          context: ./tmp/myImage
+          context: ./tmp/myimage
           # file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ needs.build-image.outputs.image-tag }}
