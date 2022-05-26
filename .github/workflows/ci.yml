@@ -84,7 +84,7 @@ jobs:
           context: /tmp/myimage.tar
           # file: ./Dockerfile
           push: true
-          # tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ needs.build-image.outputs.tag }}
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hello-world:${{ needs.build-image.outputs.image-tag }}
 
       - name: Inspect
         run: |
