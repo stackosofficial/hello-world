@@ -88,7 +88,6 @@ jobs:
           ls
           rm -rf /tmp/myimage.tar
           ls
-          ls -R
 
   # ############################################################################### DEPLOY-STAGING
   # deploy-to-gke-staging:
