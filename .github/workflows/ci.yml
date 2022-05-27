@@ -11,6 +11,9 @@ jobs:
   ################################################################################ BUILD
   build-image:
     runs-on: ubuntu-latest
+    # environment:
+    #   name: production
+    #   url: https://marvel-hello-world.stackos.io/
     outputs:
       image-tag: ${{ steps.image-tag.outputs.tag }}
 
