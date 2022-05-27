@@ -104,7 +104,7 @@ jobs:
 
       - name: Deploy Docker image to GKE - Staging
         run: |
-          kubectl patch deployment ${{ PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ needs.build-image.outputs.image-tag }}"}]}}}}'
+          kubectl patch deployment ${{ secrets.PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ needs.build-image.outputs.image-tag }}"}]}}}}'
           kubectl describe deployments.apps ${{ secrets.PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
           kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }}
 
