@@ -98,7 +98,7 @@ jobs:
       - name: Get GKE Credentials
         uses: 'google-github-actions/get-gke-credentials@v0.2.1'
         with:
-          cluster_name: 'stackos-infra-node-4'
+          cluster_name: ${{ secrets.MARVEL_CLUSTER_NAME }}
           location: 'us-central1'
           credentials: ${{ secrets.MARVEL_GCP_CREDENTIALS }}
 
@@ -122,7 +122,7 @@ jobs:
       - name: Get GKE Credentials
         uses: 'google-github-actions/get-gke-credentials@v0.2.1'
         with:
-          cluster_name: 'stackos-infra-node-4'
+          cluster_name: ${{ secrets.MARVEL_CLUSTER_NAME }}
           location: 'us-central1'
           credentials: ${{ secrets.MARVEL_GCP_CREDENTIALS }}
 
