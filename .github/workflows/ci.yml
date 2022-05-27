@@ -105,9 +105,9 @@ jobs:
       # Add app name to secrets & use that
       - name: Deploy Docker image to GKE - Staging
         run: |
-          kubectl patch deployment ${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.MARVEL_CLUSTER_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ needs.build-image.outputs.image-tag }}"}]}}}}'
-          kubectl describe deployments.apps ${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
-          kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.MARVEL_CLUSTER_NAME }}
+          kubectl patch deployment ${{ PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":${{ PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }},"image":"${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ needs.build-image.outputs.image-tag }}"}]}}}}'
+          kubectl describe deployments.apps ${{ PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
+          kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }}
 
   ############################################################################### DEPLOY-MASTER
   deploy-to-gke-master:
@@ -128,6 +128,6 @@ jobs:
 
       - name: Deploy Docker image to GKE - master
         run: |
-          kubectl patch deployment ${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.MARVEL_CLUSTER_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ needs.needs.build-image.outputs.image-tag }}"}]}}}}'
-          kubectl describe deployments.apps ${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
-          kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.MARVEL_CLUSTER_NAME }}
+          kubectl patch deployment ${{ PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":${{ PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }},"image":"${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ needs.needs.build-image.outputs.image-tag }}"}]}}}}'
+          kubectl describe deployments.apps ${{ PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
+          kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }}
