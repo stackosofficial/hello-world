@@ -8,17 +8,14 @@ jobs:
   check-env:
     runs-on: ubuntu-latest
     env:
-      if: ${{ github.ref == 'refs/heads/staging' }}
+      # if: ${{ github.ref == 'refs/heads/staging' }}
       CLUSTER_NAME: ${{ secrets.MARVEL_CLUSTER_NAME }}
-    env:
-      if: ${{ github.ref == 'refs/heads/master' }}
-      CLUSTER_NAME: 'test cluster'
+    # env:
+    #   if: ${{ github.ref == 'refs/heads/master' }}
+    #   CLUSTER_NAME: 'test cluster'
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Check env
         run: echo "env = ${{ env.CLUSTER_NAME }}"
-
-
-      
