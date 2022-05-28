@@ -105,7 +105,7 @@ jobs:
             echo "::set-output name=GCP_CREDENTIALS::${{ secrets.TITAN_GCP_CREDENTIALS }}"
           elif [ ${{ github.ref }} == 'refs/heads/staging' ]; then
             echo "::set-output name=CLUSTER_NAME::${{ secrets.MARVEL_CLUSTER_NAME }}"
-            echo "::set-output name=GCP_CREDENTIALS::toJSON(${{ secrets.MARVEL_GCP_CREDENTIALS }})"
+            echo "::set-output name=GCP_CREDENTIALS::fromJSON(${{ secrets.MARVEL_GCP_CREDENTIALS }})"
           fi
 
       - name: Get GKE Credentials
