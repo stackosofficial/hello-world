@@ -9,7 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # if: ${{ github.ref == 'refs/heads/staging' }}
-      CLUSTER_NAME: ${{ secrets.MARVEL_CLUSTER_NAME }}
+      CLUSTER_NAME: |
+        if [ ${{ github.ref }} == 'refs/heads/master' ]; then
+          echo ${{ secrets.MARVEL_CLUSTER_NAME }}
+        else
+          echo 'test cluster'
     # env:
     #   if: ${{ github.ref == 'refs/heads/master' }}
     #   CLUSTER_NAME: 'test cluster'
