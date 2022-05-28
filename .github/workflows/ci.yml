@@ -113,7 +113,7 @@ jobs:
         with:
           cluster_name: ${{ steps.get-env.outputs.CLUSTER_NAME }}
           location: 'us-central1'
-          credentials: ${{ fromJSON(steps.get-env.outputs.GCP_CREDENTIALS) }}
+          credentials: ${{ toJSON(steps.get-env.outputs.GCP_CREDENTIALS) }}
 
       # - name: Deploy Docker image to GKE - Staging
       #   run: |
