@@ -124,12 +124,12 @@ jobs:
       - name: Get GKE Credentials
         uses: 'google-github-actions/get-gke-credentials@v0.2.1'
         with:
-          cluster_name: ${{ secrets.MARVEL_CLUSTER_NAME }}
+          cluster_name: ${{ secrets.TITAN_CLUSTER_NAME }}
           location: 'us-central1'
-          credentials: ${{ secrets.MARVEL_GCP_CREDENTIALS }}
+          credentials: ${{ secrets.TITAN_GCP_CREDENTIALS }}
 
       - name: Deploy Docker image to GKE - master
         run: |
-          kubectl patch deployment ${{ secrets.PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ needs.needs.build-image.outputs.image-tag }}"}]}}}}'
-          kubectl describe deployments.apps ${{ secrets.PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
-          kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }}
+          kubectl patch deployment ${{ secrets.PROJECT_NAME }}-${{ secrets.TITAN_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}-${{ secrets.TITAN_CLUSTER_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ needs.needs.build-image.outputs.image-tag }}"}]}}}}'
+          kubectl describe deployments.apps ${{ secrets.PROJECT_NAME }}-${{ secrets.TITAN_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
+          kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME }}-${{ secrets.TITAN_CLUSTER_NAME }}
