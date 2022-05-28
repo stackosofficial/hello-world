@@ -101,11 +101,11 @@ jobs:
         id: get-env
         run: |
           if [ ${{ github.ref }} == 'refs/heads/master' ]; then
-            echo "::set-output name=CLUSTER_NAME::${{secrets.TITAN_CLUSTER_NAME}}"
-            echo "::set-output name=GCP_CREDENTIALS::${{secrets.TITAN_GCP_CREDENTIALS}}"
+            echo "::set-output name=CLUSTER_NAME::${{ secrets.TITAN_CLUSTER_NAME }}"
+            echo "::set-output name=GCP_CREDENTIALS::${{ secrets.TITAN_GCP_CREDENTIALS }}"
           elif [ ${{ github.ref }} == 'refs/heads/staging' ]; then
-            echo "::set-output name=CLUSTER_NAME::${{secrets.MARVEL_CLUSTER_NAME}}"
-            echo "::set-output name=GCP_CREDENTIALS::${{secrets.MARVEL_GCP_CREDENTIALS}}"
+            echo "::set-output name=CLUSTER_NAME::${{ secrets.MARVEL_CLUSTER_NAME }}"
+            echo "::set-output name=GCP_CREDENTIALS::${{ secrets.MARVEL_GCP_CREDENTIALS }}"
           fi
 
       - name: Get GKE Credentials
