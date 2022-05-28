@@ -7,14 +7,14 @@ on:
 jobs:
   check-env:
     runs-on: ubuntu-latest
-    env:
-      # if: ${{ github.ref == 'refs/heads/staging' }}
-      CLUSTER_NAME: |
-        if [ ${{ github.ref }} == 'refs/heads/master' ]; then
-          echo ${{ secrets.MARVEL_CLUSTER_NAME }}
-        else
-          echo 'test cluster'
-        fi
+    # env:
+    #   # if: ${{ github.ref == 'refs/heads/staging' }}
+    #   CLUSTER_NAME: |
+    #     if [ ${{ github.ref }} == 'refs/heads/master' ]; then
+    #       echo ${{ secrets.MARVEL_CLUSTER_NAME }}
+    #     else
+    #       echo 'test cluster'
+    #     fi
     # env:
     #   if: ${{ github.ref == 'refs/heads/master' }}
     #   CLUSTER_NAME: 'test cluster'
@@ -22,15 +22,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # - name: Get ENVs
-      #   id: get-env
-      #   run: |
-      #     if [ ${{ github.ref }} == 'refs/heads/master' ]; then
-      #       echo "::set-output name=CLUSTER_NAME::${{secrets.MARVEL_CLUSTER_NAME}}"
-      #     elif [ ${{ github.ref }} == 'refs/heads/staging' ]; then
-      #       echo "::set-output name=CLUSTER_NAME::test_cluster"
-      #     fi
+      - name: Get ENVs
+        id: get-env
+        run: |
+          if [ ${{ github.ref }} == 'refs/heads/master' ]; then
+            echo "::set-output name=CLUSTER_NAME::${{secrets.MARVEL_CLUSTER_NAME}}"
+          elif [ ${{ github.ref }} == 'refs/heads/staging' ]; then
+            echo "::set-output name=CLUSTER_NAME::test_cluster"
+          fi
 
       - name: Check env
-        # run: echo "env = ${{ steps.get-env.outputs.CLUSTER_NAME }}"
-        run: echo "env = ${{ env.CLUSTER_NAME }}"
+        run: echo "env = ${{ steps.get-env.outputs.CLUSTER_NAME }}"
+        # run: echo "env = ${{ env.CLUSTER_NAME }}"
