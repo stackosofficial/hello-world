@@ -47,7 +47,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./Dockerfile
+          file: ./frontend/Dockerfile
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME_FE }}:${{ steps.image-tag.outputs.tag }}
           outputs: type=docker,dest=/tmp/myimage.tar
 
