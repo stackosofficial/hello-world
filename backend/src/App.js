@@ -15,7 +15,7 @@ function App() {
           target='_blank'
           rel='noopener noreferrer'
         >
-          Backend Project Test
+          Backend Project
         </a>
       </header>
     </div>
