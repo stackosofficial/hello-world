@@ -2,7 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [master, staging]
+    branches: staging
+
+  paths: 'backend/**'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -11,9 +13,9 @@ jobs:
   ################################################################################ BUILD
   build-image:
     runs-on: ubuntu-latest
-    environment:
-      name: staging
-      url: https://marvel-hello-world.stackos.io/
+    # environment:
+    #   name: staging
+    #   url: https://marvel-hello-world.stackos.io/
     outputs:
       image-tag: ${{ steps.image-tag.outputs.tag }}
 
@@ -46,7 +48,7 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ steps.image-tag.outputs.tag }}
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME_BE }}:${{ steps.image-tag.outputs.tag }}
           outputs: type=docker,dest=/tmp/myimage.tar
 
       - name: Upload artifact
@@ -83,7 +85,7 @@ jobs:
 
       - name: Push image
         run: |
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ needs.build-image.outputs.image-tag }}
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME_BE }}:${{ needs.build-image.outputs.image-tag }}
 
       - name: Remove temp docker image
         run: |
@@ -107,9 +109,9 @@ jobs:
 
       - name: Deploy Docker image to GKE - Staging
         run: |
-          kubectl patch deployment ${{ secrets.PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ needs.build-image.outputs.image-tag }}"}]}}}}'
-          kubectl describe deployments.apps ${{ secrets.PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
-          kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME }}-${{ secrets.MARVEL_CLUSTER_NAME }}
+          kubectl patch deployment ${{ secrets.PROJECT_NAME_BE }}-${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME_BE }}-${{ secrets.MARVEL_CLUSTER_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME_BE }}:${{ needs.build-image.outputs.image-tag }}"}]}}}}'
+          kubectl describe deployments.apps ${{ secrets.PROJECT_NAME_BE }}-${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
+          kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME_BE }}-${{ secrets.MARVEL_CLUSTER_NAME }}
 
   ############################################################################### DEPLOY-MASTER
   deploy-to-gke-master:
@@ -130,6 +132,6 @@ jobs:
 
       - name: Deploy Docker image to GKE - master
         run: |
-          kubectl patch deployment ${{ secrets.PROJECT_NAME }}-${{ secrets.TITAN_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME }}-${{ secrets.TITAN_CLUSTER_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME }}:${{ needs.needs.build-image.outputs.image-tag }}"}]}}}}'
-          kubectl describe deployments.apps ${{ secrets.PROJECT_NAME }}-${{ secrets.TITAN_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
-          kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME }}-${{ secrets.TITAN_CLUSTER_NAME }}
+          kubectl patch deployment ${{ secrets.PROJECT_NAME_BE }}-${{ secrets.TITAN_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME_BE }}-${{ secrets.TITAN_CLUSTER_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME_BE }}:${{ needs.needs.build-image.outputs.image-tag }}"}]}}}}'
+          kubectl describe deployments.apps ${{ secrets.PROJECT_NAME_BE }}-${{ secrets.TITAN_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
+          kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME_BE }}-${{ secrets.TITAN_CLUSTER_NAME }}
