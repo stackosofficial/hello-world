@@ -45,9 +45,9 @@ jobs:
           echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))"
           echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))-matrix"
           echo "::set-output name=tag::authority-$(git describe --tags $(git rev-list --tags --max-count=1))"
-          echo "::set-output "$(git describe --tags $(git rev-list --tags --max-count=1))"
-          echo "::set-output "$(git describe --tags $(git rev-list --tags --max-count=1))-matrix"
-          echo "::set-output "authority-$(git describe --tags $(git rev-list --tags --max-count=1))"
+          echo "$(git describe --tags $(git rev-list --tags --max-count=1))"
+          echo "$(git describe --tags $(git rev-list --tags --max-count=1))-matrix"
+          echo "authority-$(git describe --tags $(git rev-list --tags --max-count=1))"
 
   #     - name: Set up Docker Buildx
   #       uses: docker/setup-buildx-action@v2
