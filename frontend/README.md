@@ -4,11 +4,13 @@
 
 #### Github
 
-- GIT Token (Generate API key from github with required permissions)
+- Github Personal Access Token (Generate token from github with required permissions)
+- Settings > Developer Settings > Personal access tokens
+- Important: `Set expiration date!` After expiration you will have to create new one!
 
 #### Dockerhub
 
-- Dockerhub password
+- Dockerhub Personal Access Token
 - Dockerhub username
 
 #### Kubernetes
@@ -29,10 +31,14 @@
 
 #### Once getting all of them put them in github action secrets
 
-DOCKER_HUB_PASSWORD
-DOCKER_HUB_USERNAME
-GCLOUD_KEY
-GCP_CREDENTIALS
-GIT_TOKEN
+##### ORGANIZATION LEVEL SECRETS
+
 NAMESPACE
 PROJECT_NAME
+
+##### REPOSITORY LEVEL SECRETS
+
+DOCKER_HUB_TOKEN
+DOCKER_HUB_USERNAME
+GCP_CREDENTIALS
+GIT_TOKEN
