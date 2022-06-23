@@ -32,13 +32,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           WITH_V: false
 
+      # - id: image-tag
+      #   run: |
+      #     if [ ${{ github.ref }} == 'refs/heads/master' ]; then
+      #       echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))"
+      #     elif [ ${{ github.ref }} == 'refs/heads/staging' ]; then
+      #       echo "::set-output name=tag::staging-$(git rev-parse --short HEAD)"
+      #     fi
+
       - id: image-tag
-        run: |
-          if [ ${{ github.ref }} == 'refs/heads/master' ]; then
-            echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))"
-          elif [ ${{ github.ref }} == 'refs/heads/staging' ]; then
-            echo "::set-output name=tag::staging-$(git rev-parse --short HEAD)"
-          fi
+        run: echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))-matrix"
 
       - name: Check tag
         run: |
