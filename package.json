@@ -1,0 +1,32 @@
+{
+  "name": "hello-world",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=production node ./src/index",
+    "dev": "nodemon ./src/index",
+    "test": "mocha --timeout 30000 ./test/**/*.js --exit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stackosofficial/threshold-api-service.git"
+  },
+  "keywords": [],
+  "author": "StackOs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stackosofficial/threshold-api-service/issues"
+  },
+  "homepage": "https://github.com/stackosofficial/threshold-api-service#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "mocha": "^10.1.0",
+    "nodemon": "^2.0.20",
+    "supertest": "^6.3.1",
+    "uuid": "^9.0.0"
+  }
+}
