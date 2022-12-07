@@ -1,4 +1,4 @@
-name: CI
+name: CI FRONTEND
 
 on:
   push:
@@ -40,98 +40,107 @@ jobs:
             echo "::set-output name=tag::staging-$(git rev-parse --short HEAD)"
           fi
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Build image & save to tmp
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./Dockerfile
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME_FE }}:${{ steps.image-tag.outputs.tag }}
-          outputs: type=docker,dest=/tmp/myimage.tar
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: myimage
-          path: /tmp/myimage.tar
-
-  ################################################################################ PUSH
-  push-image:
-    runs-on: ubuntu-latest
-    needs: build-image
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: myimage
-          path: /tmp
-
-      - name: Load image
+      - name: Check tag
         run: |
-          docker load --input /tmp/myimage.tar
-          docker image ls -a
+          echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))"
+          echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))-matrix"
+          echo "::set-output name=tag::authority-$(git describe --tags $(git rev-list --tags --max-count=1))"
+          echo "::set-output "$(git describe --tags $(git rev-list --tags --max-count=1))"
+          echo "::set-output "$(git describe --tags $(git rev-list --tags --max-count=1))-matrix"
+          echo "::set-output "authority-$(git describe --tags $(git rev-list --tags --max-count=1))"
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v2
 
-      - name: Push image
-        run: |
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME_FE }}:${{ needs.build-image.outputs.image-tag }}
+  #     - name: Build image & save to tmp
+  #       uses: docker/build-push-action@v3
+  #       with:
+  #         context: .
+  #         file: ./frontend/Dockerfile
+  #         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME_FE }}:${{ steps.image-tag.outputs.tag }}
+  #         outputs: type=docker,dest=/tmp/myimage.tar
 
-      - name: Remove temp docker image
-        run: |
-          rm -rf /tmp/myimage.tar
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: myimage
+  #         path: /tmp/myimage.tar
 
-  ############################################################################### DEPLOY-STAGING
-  deploy-to-gke-staging:
-    if: ${{ github.ref == 'refs/heads/staging' }}
-    runs-on: ubuntu-latest
-    needs: [build-image, push-image]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  # ################################################################################ PUSH
+  # push-image:
+  #   runs-on: ubuntu-latest
+  #   needs: build-image
 
-      - name: Get GKE Credentials
-        uses: 'google-github-actions/get-gke-credentials@v0.2.1'
-        with:
-          cluster_name: ${{ secrets.MARVEL_CLUSTER_NAME }}
-          location: 'us-central1'
-          credentials: ${{ secrets.MARVEL_GCP_CREDENTIALS }}
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
 
-      - name: Deploy Docker image to GKE - Staging
-        run: |
-          kubectl patch deployment ${{ secrets.PROJECT_NAME_FE }}-${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME_FE }}-${{ secrets.MARVEL_CLUSTER_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME_FE }}:${{ needs.build-image.outputs.image-tag }}"}]}}}}'
-          kubectl describe deployments.apps ${{ secrets.PROJECT_NAME_FE }}-${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
-          kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME_FE }}-${{ secrets.MARVEL_CLUSTER_NAME }}
+  #     - name: Download artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: myimage
+  #         path: /tmp
 
-  ############################################################################### DEPLOY-MASTER
-  deploy-to-gke-master:
-    if: ${{ github.ref == 'refs/heads/master' }}
-    runs-on: ubuntu-latest
-    needs: [build-image, push-image]
+  #     - name: Load image
+  #       run: |
+  #         docker load --input /tmp/myimage.tar
+  #         docker image ls -a
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  #     - name: Login to Docker Hub
+  #       uses: docker/login-action@v2
+  #       with:
+  #         username: ${{ secrets.DOCKER_HUB_USERNAME }}
+  #         password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Get GKE Credentials
-        uses: 'google-github-actions/get-gke-credentials@v0.2.1'
-        with:
-          cluster_name: ${{ secrets.TITAN_CLUSTER_NAME }}
-          location: 'us-central1'
-          credentials: ${{ secrets.TITAN_GCP_CREDENTIALS }}
+  #     - name: Push image
+  #       run: |
+  #         docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME_FE }}:${{ needs.build-image.outputs.image-tag }}
 
-      - name: Deploy Docker image to GKE - master
-        run: |
-          kubectl patch deployment ${{ secrets.PROJECT_NAME_FE }}-${{ secrets.TITAN_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME_FE }}-${{ secrets.TITAN_CLUSTER_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME_FE }}:${{ needs.needs.build-image.outputs.image-tag }}"}]}}}}'
-          kubectl describe deployments.apps ${{ secrets.PROJECT_NAME_FE }}-${{ secrets.TITAN_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
-          kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME_FE }}-${{ secrets.TITAN_CLUSTER_NAME }}
+  #     - name: Remove temp docker image
+  #       run: |
+  #         rm -rf /tmp/myimage.tar
+
+  # ############################################################################### DEPLOY-STAGING
+  # deploy-to-gke-staging:
+  #   if: ${{ github.ref == 'refs/heads/staging' }}
+  #   runs-on: ubuntu-latest
+  #   needs: [build-image, push-image]
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+
+  #     - name: Get GKE Credentials
+  #       uses: 'google-github-actions/get-gke-credentials@v0.2.1'
+  #       with:
+  #         cluster_name: ${{ secrets.MARVEL_CLUSTER_NAME }}
+  #         location: 'us-central1'
+  #         credentials: ${{ secrets.MARVEL_GCP_CREDENTIALS }}
+
+  #     - name: Deploy Docker image to GKE - Staging
+  #       run: |
+  #         kubectl patch deployment ${{ secrets.PROJECT_NAME_FE }}-${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME_FE }}-${{ secrets.MARVEL_CLUSTER_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME_FE }}:${{ needs.build-image.outputs.image-tag }}"}]}}}}'
+  #         kubectl describe deployments.apps ${{ secrets.PROJECT_NAME_FE }}-${{ secrets.MARVEL_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
+  #         kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME_FE }}-${{ secrets.MARVEL_CLUSTER_NAME }}
+
+  # ############################################################################### DEPLOY-MASTER
+  # deploy-to-gke-master:
+  #   if: ${{ github.ref == 'refs/heads/master' }}
+  #   runs-on: ubuntu-latest
+  #   needs: [build-image, push-image]
+
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+
+  #     - name: Get GKE Credentials
+  #       uses: 'google-github-actions/get-gke-credentials@v0.2.1'
+  #       with:
+  #         cluster_name: ${{ secrets.TITAN_CLUSTER_NAME }}
+  #         location: 'us-central1'
+  #         credentials: ${{ secrets.TITAN_GCP_CREDENTIALS }}
+
+  #     - name: Deploy Docker image to GKE - master
+  #       run: |
+  #         kubectl patch deployment ${{ secrets.PROJECT_NAME_FE }}-${{ secrets.TITAN_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${{ secrets.PROJECT_NAME_FE }}-${{ secrets.TITAN_CLUSTER_NAME }}","image":"${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.PROJECT_NAME_FE }}:${{ needs.needs.build-image.outputs.image-tag }}"}]}}}}'
+  #         kubectl describe deployments.apps ${{ secrets.PROJECT_NAME_FE }}-${{ secrets.TITAN_CLUSTER_NAME }} --namespace ${{ secrets.NAMESPACE }} |grep -i image
+  #         kubectl get po --namespace ${{ secrets.NAMESPACE }} |grep ${{ secrets.PROJECT_NAME_FE }}-${{ secrets.TITAN_CLUSTER_NAME }}
